@@ -16,7 +16,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App" ref={(c) => this._container = c}>
+      <div className="App">
         <IsometricGrid area={area} />
       </div>
     );

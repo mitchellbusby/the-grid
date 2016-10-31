@@ -2,6 +2,8 @@ var Isomer = require('isomer');
 
 import React, { Component, PropTypes } from 'react';
 
+import Colors from './Colors';
+
 class IsometricGrid extends Component {
   render () {
     return (
@@ -24,44 +26,38 @@ class IsometricGrid extends Component {
 
     var iso = new Isomer(this._canvas);
 
-    var Point  = Isomer.Point;
-    var Path   = Isomer.Path;
-    var Shape  = Isomer.Shape;
-    var Vector = Isomer.Vector;
-    var Color  = Isomer.Color;
-
-    var red = new Color(160, 60, 50);
-    var blue = new Color(50, 60, 160);
-    var yellow = new Color(205, 211, 31);
-    var brown = new Color(0, 0, 0); // actually black
-    var green = new Color(63, 160, 50);
-
-    var white = new Color(255, 255, 255);
+    let { Color, Point, Shape } = Isomer;
 
     let { area } = this.props;
 
     var count = 0;
+
     area['matrix'].forEach(function(row, row_index) {
       row.forEach(function(tile, tile_index) {
         if (tile === 1) {
-          var color = white;
+          //var color = white;
 
+          let color;
+          // Classification function
           if (count < area.blueTiles) {
-            color = blue;
+            color = new Color(...Colors.BLUE);
           } else if (count < (area.blueTiles + area.redTiles)) {
-            color = red;
+            color = new Color(...Colors.RED);
           } else if (count < (area.blueTiles + area.redTiles + area.yellowTiles)) {
-            color = yellow;
+            color = new Color(...Colors.YELLOW);
           } else if (count < (area.blueTiles + area.redTiles + area.yellowTiles + area.brownTiles)) {
-            color = brown;
+            color = new Color(...Colors.BROWN);
           } else if (count < (area.blueTiles + area.redTiles + area.yellowTiles + area.brownTiles + area.greenTiles)) {
-            color = green;
+            color = new Color(...Colors.GREEN);
+          } else {
+            color = new Color(...Colors.WHITE);
           }
 
           count++;
 
           // I occasionally get one too many
           if (count <= area.tileCount) {
+            // Add the shape to be rendered
             iso.add(Shape.Prism(new Point(row_index, tile_index, 0), 1, 1, 0.08), color);
           }
         }
