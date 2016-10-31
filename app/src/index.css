@@ -146,6 +146,10 @@ strong {
   font-weight: 500;
 }
 
+h1.title {
+  padding-left: 2em;
+}
+
 /* 09 Images */
 
 body {
@@ -283,4 +287,3 @@ footer .button {
     margin-right: 0;
   }
 }
-

@@ -11,6 +11,43 @@ class IsometricGrid extends Component {
     if (this._canvas) {
       // Clear and apply all the things
       this._canvas.getContext('2d').clearRect(0,0,this._canvas.width,this._canvas.height);
+      let { Color, Point, Shape } = Isomer;
+
+      let { area } = this.props;
+
+      var count = 0;
+
+      area['matrix'].forEach((row, row_index) => {
+        row.forEach((tile, tile_index) => {
+          if (tile === 1) {
+            //var color = white;
+
+            let color;
+            // Classification function
+            if (count < area.blueTiles) {
+              color = new Color(...Colors.BLUE);
+            } else if (count < (area.blueTiles + area.redTiles)) {
+              color = new Color(...Colors.RED);
+            } else if (count < (area.blueTiles + area.redTiles + area.yellowTiles)) {
+              color = new Color(...Colors.YELLOW);
+            } else if (count < (area.blueTiles + area.redTiles + area.yellowTiles + area.brownTiles)) {
+              color = new Color(...Colors.BROWN);
+            } else if (count < (area.blueTiles + area.redTiles + area.yellowTiles + area.brownTiles + area.greenTiles)) {
+              color = new Color(...Colors.GREEN);
+            } else {
+              color = new Color(...Colors.WHITE);
+            }
+
+            count++;
+
+            // I occasionally get one too many
+            if (count <= area.tileCount) {
+              // Add the shape to be rendered
+              this._iso.add(Shape.Prism(new Point(row_index, tile_index, 0), 1, 1, 0.08), color);
+            }
+          }
+        });
+      });
     }
     return (
       <div className={"isometricGrid"}>
@@ -35,43 +72,12 @@ class IsometricGrid extends Component {
     this._canvas.height = 2 * height;
     this._iso = new Isomer(this._canvas);
 
-    let { Color, Point, Shape } = Isomer;
-
-    let { area } = this.props;
-
-    var count = 0;
-
-    area['matrix'].forEach((row, row_index) => {
-      row.forEach((tile, tile_index) => {
-        if (tile === 1) {
-          //var color = white;
-
-          let color;
-          // Classification function
-          if (count < area.blueTiles) {
-            color = new Color(...Colors.BLUE);
-          } else if (count < (area.blueTiles + area.redTiles)) {
-            color = new Color(...Colors.RED);
-          } else if (count < (area.blueTiles + area.redTiles + area.yellowTiles)) {
-            color = new Color(...Colors.YELLOW);
-          } else if (count < (area.blueTiles + area.redTiles + area.yellowTiles + area.brownTiles)) {
-            color = new Color(...Colors.BROWN);
-          } else if (count < (area.blueTiles + area.redTiles + area.yellowTiles + area.brownTiles + area.greenTiles)) {
-            color = new Color(...Colors.GREEN);
-          } else {
-            color = new Color(...Colors.WHITE);
-          }
-
-          count++;
-
-          // I occasionally get one too many
-          if (count <= area.tileCount) {
-            // Add the shape to be rendered
-            this._iso.add(Shape.Prism(new Point(row_index, tile_index, 0), 1, 1, 0.08), color);
-          }
-        }
-      });
+    // You need to force the re-render
+    this.setState({
+      grid: this._iso,
+      canvas: this._canvas,
     });
+
   }
 }
 
